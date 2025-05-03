@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>From Real to Multiversum</title>
+</head>
+<body>
+  <h1>Upload een prompt voor jouw cartoon</h1>
+  <input type="text" id="prompt" placeholder="Bijv: Een hond in Pixar-stijl">
+  <button onclick="generate()">Genereer Afbeelding</button>
+  <div id="result"></div>
+
+  <script>
+    async function generate() {
+      const prompt = document.getElementById("prompt").value;
+      document.getElementById("result").innerHTML = "Even geduld...";
+
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imagePrompt: prompt })
+      });
+
+      const data = await response.json();
+      if (data && data.data && data.data[0] && data.data[0].url) {
+        document.getElementById("result").innerHTML =
+          '<img src="' + data.data[0].url + '" width="400">';
+      } else {
+        document.getElementById("result").innerHTML = "Er ging iets mis.";
+      }
+    }
+  </script>
+</body>
+</html>
